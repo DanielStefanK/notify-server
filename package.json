@@ -1,0 +1,15 @@
+{
+  "name": "notification_server",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "repository": "git@github.com:DanielStefanK/notify-server.git",
+  "author": "Daniel Stefan Klose <daniel-stefan.klose@udo.edu>",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
