@@ -36,7 +36,7 @@ router.post("/login", async function(req, res) {
     username
   ]);
 
-  if (rows.length > 1 || rows.length < 1) {
+  if (rows.length > 1 || rows.length < 1 || !rows[0].admin) {
     res.status(401).json({
       success: false,
       data: null,
