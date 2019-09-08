@@ -4,7 +4,11 @@ let pool;
 
 const createPool = () => {
   pool = new Pool({
-    host: `postgres://${process.env.DB_USER}:${process.env.DB_PASS}${process.env.DB_HOST}/${process.env.DB_NAME}`
+    user: process.env.DB_USER,
+    host: process.env.DB_HOST,
+    database: process.env.DB_NAME,
+    password: process.env.DB_PASS,
+    port: "5432"
   });
 };
 

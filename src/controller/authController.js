@@ -36,7 +36,16 @@ router.post("/login", async function(req, res) {
     username
   ]);
 
-  const valid = bcrypt.compare(password, rows[0].password);
+  if (rows.length > 1 || rows.length < 1) {
+    res.status(401).json({
+      success: false,
+      data: null,
+      error: "could not authenticate"
+    });
+    return;
+  }
+
+  const valid = await bcrypt.compare(password, rows[0].password);
 
   if (!valid) {
     res.status(401).json({
@@ -44,8 +53,9 @@ router.post("/login", async function(req, res) {
       data: null,
       error: "could not authenticate"
     });
+    return;
   }
-  //TODO load user and check pass word and create token
+
   const token = jwt.sign({ username }, process.env.JWT_KEY, {
     expiresIn: 60 * 60
   });
@@ -83,22 +93,32 @@ router.post("/register", async function(req, res) {
   const username = req.body.username;
   const hashedPW = await bcrypt.hash(req.body.password, 10);
 
-  const { rows } = await client.query(
-    "INSERT INTO users (username, password) VALUES($1, $2)",
-    [username, hashedPW]
-  );
+  client
+    .query("INSERT INTO users (username, password) VALUES($1, $2)", [
+      username,
+      hashedPW
+    ])
+    .then(() => {
+      console.log(`created user '${username}'`);
 
-  console.log(`created user '${username}'`);
-
-  res.json({
-    success: true,
-    data: {
-      user: {
-        username
-      }
-    },
-    error: null
-  });
+      res.json({
+        success: true,
+        data: {
+          user: {
+            username
+          }
+        },
+        error: null
+      });
+    })
+    .catch(err => {
+      console.log("User could not be created", err);
+      res.json({
+        success: false,
+        data: null,
+        error: "Could not create user"
+      });
+    });
 });
 
 module.exports = router;
