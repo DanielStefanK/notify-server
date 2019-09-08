@@ -5,6 +5,7 @@ var bodyParser = require("body-parser");
 const router = require("./controller");
 var cors = require("cors");
 const { createPool } = require("./db");
+require("./utils/webPushSetup");
 
 createPool();
 app.use(cors());
